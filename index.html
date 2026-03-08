@@ -4,139 +4,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Portal</title>
+
     <style>
-        :root {
-            --bg-dark: #070b14;
-            --card-bg: rgba(15, 23, 42, 0.6);
-            --text-main: #f8fafc;
-            --accent-blue: #38bdf8;
-            /* Status Colors */
-            --status-green: #00ff88;
-            --status-yellow: #ffd700;
-            --status-black: #000000;
-            --status-white: #ffffff;
-        }
+    :root {
+        --bg-dark: #070b14;
+        --card-bg: rgba(15, 23, 42, 0.6);
+        --text-main: #f8fafc;
+        --accent-blue: #38bdf8;
+    }
 
-        body {
-            background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 50px 20px;
-        }
+    body {
+        background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
+        color: var(--text-main);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 50px 20px;
+    }
 
-        #container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-        }
+    #container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 1100px;
+    }
 
-        /* --- Card Design --- */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+    /* --- Card Design --- */
+    .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
 
-        /* The Scale Down Effect */
-        .card.active-state {
-            transform: scale(0.94);
-            filter: brightness(0.7);
-        }
+    .card.active-state {
+        transform: scale(0.94);
+        filter: brightness(0.7);
+    }
 
-        .card-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 15px;
-            object-fit: cover;
-            margin-right: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-        }
+    .card-img {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        object-fit: cover;
+        margin-right: 20px;
+        border: 2px solid rgba(255,255,255,0.1);
+    }
 
-        .card-info { flex: 1; }
-        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
-        .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
+    .card-info { flex: 1; }
+    .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
 
-        /* --- Status Dots & Glowing Aura --- */
-        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
-        
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 12px;
-            position: relative;
-        }
+    /* --- Status Dots: Fluid Sea Motion --- */
+    .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
+    
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 15px;
+        position: relative;
+        z-index: 1;
+        /* Make the gradient 3x wider than the dot so it can pan across */
+        background-size: 300% 300%; 
+        animation: oceanFlow 4s ease infinite;
+    }
 
-        /* The Rotating Aura */
-        .dot::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            border-top-color: inherit;
-            animation: rotateAura 2s linear infinite;
-        }
+    /* The Liquid Glowing Aura */
+    .dot::before {
+        content: '';
+        position: absolute;
+        inset: -6px; /* How far the glow spreads */
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(6px); /* Blurs the gradient to look like light */
+        background: inherit; /* Pulls the exact flowing colors from the main dot */
+        background-size: 300% 300%;
+        /* Flows colors AND breathes in size softly */
+        animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate;
+    }
 
-        .status-active { background: var(--status-green); border-top-color: var(--status-green); box-shadow: 0 0 15px var(--status-green); }
-        .status-semi { background: var(--status-yellow); border-top-color: var(--status-yellow); box-shadow: 0 0 15px var(--status-yellow); }
-        .status-inactive { background: var(--status-black); border: 1px solid #333; border-top-color: #444; }
-        .status-unknown { background: var(--status-white); border-top-color: var(--status-white); box-shadow: 0 0 10px var(--status-white); }
-        
-        .status-construction {
-            background: linear-gradient(45deg, #fff 25%, #000 25%, #000 50%, #fff 50%, #fff 75%, #000 75%, #000);
-            background-size: 8px 8px;
-            animation: stripeSlide 0.6s linear infinite;
-            border-top-color: #fff;
-        }
+    /* 1. Green Active (Flows between Bright Green and Cyan) */
+    .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
 
-        /* --- Confirmation Overlay --- */
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(7, 11, 20, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .card.active-state .overlay { opacity: 1; pointer-events: all; }
+    /* 2. Yellow Semi (Flows between Gold and Burnt Orange) */
+    .status-semi { background-image: linear-gradient(135deg, #ffd700, #ff5e00, #ffd700); }
 
-        .btn {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-        }
-        .btn-go { background: var(--accent-blue); color: #000; }
-        .btn-cancel { background: #334155; color: #fff; }
-        .btn:hover { transform: scale(1.05); }
+    /* 3. Black Inactive (Flows between Deep Navy and Charcoal) */
+    .status-inactive { background-image: linear-gradient(135deg, #0f172a, #334155, #0f172a); border: 1px solid #1e293b; }
+    .status-inactive::before { opacity: 0.4; }
 
-        @keyframes rotateAura { to { transform: rotate(360deg); } }
-        @keyframes stripeSlide { from { background-position: 0 0; } to { background-position: 8px 8px; } }
-    </style>
+    /* 4. White Unknown (Flows between Pure White and Silver) */
+    .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
+
+    /* 5. Construction (Smooth, fluid diagonal wave of stripes) */
+    .status-construction {
+        background-image: repeating-linear-gradient(-45deg, #ffffff, #ffffff 4px, #000000 4px, #000000 8px);
+        background-size: 200% 200%;
+        animation: constructionWave 1.5s linear infinite;
+    }
+    .status-construction::before { filter: blur(4px); opacity: 0.6; }
+
+
+    /* --- Overlay Buttons --- */
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(7, 11, 20, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .card.active-state .overlay { opacity: 1; pointer-events: all; }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        font-size: 0.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.2s;
+    }
+    .btn-go { background: var(--accent-blue); color: #000; }
+    .btn-cancel { background: #334155; color: #fff; }
+    .btn:hover { transform: scale(1.05); }
+
+    /* --- The Magic Animations --- */
+    @keyframes oceanFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes auraBreathe {
+        0% { transform: scale(0.85); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    @keyframes constructionWave {
+        100% { background-position: 20px 20px; }
+    }
+</style>
+
+    
 </head>
 <body>
 
