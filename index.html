@@ -109,14 +109,29 @@
     /* 4. White Unknown (Flows between Pure White and Silver) */
     .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
 
-    /* 5. Construction (Smooth, fluid diagonal wave of stripes) */
+    /* 5. Construction (Fluid Yellow & Black Hazard Lines) */
     .status-construction {
-        background-image: repeating-linear-gradient(-45deg, #ffffff, #ffffff 4px, #000000 4px, #000000 8px);
+        /* Thick, clear hazard stripes */
+        background-image: repeating-linear-gradient(
+            -45deg, 
+            #ffd700, 
+            #ffd700 8px, 
+            #000000 8px, 
+            #000000 16px
+        );
         background-size: 200% 200%;
-        animation: constructionWave 1.5s linear infinite;
+        /* A dedicated animation to slide the stripes perfectly */
+        animation: hazardFlow 1s linear infinite; 
     }
-    .status-construction::before { filter: blur(4px); opacity: 0.6; }
 
+    /* The glowing yellow aura for construction */
+    .status-construction::before { 
+        filter: blur(5px); 
+        opacity: 0.8;
+        background: inherit; /* Pulls the exact hazard stripes */
+        /* Combines the flowing stripes with the breathing glow */
+        animation: hazardFlow 1s linear infinite, auraBreathe 2.5s ease-in-out infinite alternate;
+    }
 
     /* --- Overlay Buttons --- */
     .overlay {
@@ -160,6 +175,12 @@
 
     @keyframes constructionWave {
         100% { background-position: 20px 20px; }
+    }
+            /* Add this to your @keyframes at the bottom of the CSS */
+    @keyframes hazardFlow {
+        0% { background-position: 0 0; }
+        /* 32px is a multiple of the 16px stripe width, creating a perfectly seamless loop */
+        100% { background-position: -32px 32px; } 
     }
 </style>
 
