@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Hay Day Clan",
+    "desc": "Active traders only! Join our level 50+ neighborhood for weekly derbies.",
+    "img": "https://placehold.jp/24/38bdf8/ffffff/80x80.png?text=HD",
+    "color": "#fbbf24",
+    "status": "active",
+    "link": "https://t.me/your_link"
+  },
+  {
+    "name": "Under Maintenance",
+    "desc": "We are currently updating our server scripts. Check back soon!",
+    "img": "https://placehold.jp/24/1e293b/ffffff/80x80.png?text=FIX",
+    "color": "#94a3b8",
+    "status": "construction",
+    "link": "#"
+  },
+  {
+    "name": "Support Channel",
+    "desc": "Need help? Our staff is semi-active during European hours.",
+    "img": "https://placehold.jp/24/0088cc/ffffff/80x80.png?text=TG",
+    "color": "#0088cc",
+    "status": "semi",
+    "link": "https://t.me/your_support"
+  }
+]
