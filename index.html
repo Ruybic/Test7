@@ -4,245 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Portal</title>
-
     <style>
-    :root {
-        --bg-dark: #070b14;
-        --card-bg: rgba(15, 23, 42, 0.6);
-        --text-main: #f8fafc;
-        --accent-blue: #38bdf8;
-    }
+        :root {
+            --bg-dark: #070b14;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --text-main: #f8fafc;
+            --accent-blue: #38bdf8;
+            --status-green: #00ff88;
+            --status-yellow: #ffd700;
+            --status-black: #000000;
+            --status-white: #ffffff;
+        }
 
-    body {
-        background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
-        color: var(--text-main);
-        font-family: 'Segoe UI', Roboto, sans-serif;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        padding: 50px 20px;
-    }
+        body {
+            background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 50px 20px;
+        }
 
-    #container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-        gap: 20px;
-        width: 100%;
-        max-width: 1100px;
-    }
+        header { text-align: center; margin-bottom: 50px; }
+        header h1 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 5px; }
+        header p { opacity: 0.5; font-size: 0.9rem; }
 
-    /* --- Card Design --- */
-    .card {
-        background: var(--card-bg);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        cursor: pointer;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
+        #container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
 
-    .card.active-state {
-        transform: scale(0.94);
-        filter: brightness(0.7);
-    }
+        /* --- Card Styling --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
 
-    .card-img {
-        width: 70px;
-        height: 70px;
-        border-radius: 15px;
-        object-fit: cover;
-        margin-right: 20px;
-        border: 2px solid rgba(255,255,255,0.1);
-    }
+        .card.active-state { transform: scale(0.94); filter: brightness(0.7); }
 
-    .card-info { flex: 1; }
-    .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
-    .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
+        .card-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
 
-    /* --- Status Dots: Fluid Sea Motion --- */
-    .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
-    
-    .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 15px;
-        position: relative;
-        z-index: 1;
-        /* Make the gradient 3x wider than the dot so it can pan across */
-        background-size: 300% 300%; 
-        animation: oceanFlow 4s ease infinite;
-    }
+        .card-info { flex: 1; }
+        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
 
-    /* The Liquid Glowing Aura */
-    .dot::before {
-        content: '';
-        position: absolute;
-        inset: -6px; /* How far the glow spreads */
-        border-radius: 50%;
-        z-index: -1;
-        filter: blur(6px); /* Blurs the gradient to look like light */
-        background: inherit; /* Pulls the exact flowing colors from the main dot */
-        background-size: 300% 300%;
-        /* Flows colors AND breathes in size softly */
-        animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate;
-    }
+        /* --- Status Dots (Liquid Sea Motion) --- */
+        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+            z-index: 1;
+            background-size: 300% 300%; 
+            animation: oceanFlow 4s ease infinite;
+        }
 
-    /* 1. Green Active (Flows between Bright Green and Cyan) */
-    .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
+        .dot::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(8px);
+            background: inherit;
+            background-size: 300% 300%;
+            animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate;
+        }
 
-    /* 2. Yellow Semi (Flows between Gold and Burnt Orange) */
-    .status-semi { background-image: linear-gradient(135deg, #ffd700, #ff5e00, #ffd700); }
+        .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
+        .status-semi { background-image: linear-gradient(135deg, #ffd700, #ff5e00, #ffd700); }
+        .status-inactive { background-image: linear-gradient(135deg, #0f172a, #334155, #0f172a); border: 1px solid #1e293b; }
+        .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
+        
+        /* The New Molten Liquid Construction Status */
+        .status-construction {
+            background: radial-gradient(circle at center, #ffd700, #8b6b00, #000000);
+            background-size: 200% 200%;
+            animation: moltenFlow 3s ease-in-out infinite alternate;
+        }
 
-    /* 3. Black Inactive (Flows between Deep Navy and Charcoal) */
-    .status-inactive { background-image: linear-gradient(135deg, #0f172a, #334155, #0f172a); border: 1px solid #1e293b; }
-    .status-inactive::before { opacity: 0.4; }
+        /* --- Overlay --- */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7, 11, 20, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .card.active-state .overlay { opacity: 1; pointer-events: all; }
 
-    /* 4. White Unknown (Flows between Pure White and Silver) */
-    .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-go { background: var(--accent-blue); color: #000; }
+        .btn-cancel { background: #334155; color: #fff; }
 
-    /* 5. Construction (Fluid Yellow & Black Hazard Lines) */
-    .status-construction {
-        /* Thick, clear hazard stripes */
-        background-image: repeating-linear-gradient(
-            -45deg, 
-            #ffd700, 
-            #ffd700 8px, 
-            #000000 8px, 
-            #000000 16px
-        );
-        background-size: 200% 200%;
-        /* A dedicated animation to slide the stripes perfectly */
-        animation: hazardFlow 1s linear infinite; 
-    }
-
-    /* The glowing yellow aura for construction */
-    .status-construction::before { 
-        filter: blur(5px); 
-        opacity: 0.8;
-        background: inherit; /* Pulls the exact hazard stripes */
-        /* Combines the flowing stripes with the breathing glow */
-        animation: hazardFlow 1s linear infinite, auraBreathe 2.5s ease-in-out infinite alternate;
-    }
-
-    /* --- Overlay Buttons --- */
-    .overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(7, 11, 20, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-    .card.active-state .overlay { opacity: 1; pointer-events: all; }
-
-    .btn {
-        padding: 10px 20px;
-        border-radius: 10px;
-        border: none;
-        font-size: 0.8rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-    }
-    .btn-go { background: var(--accent-blue); color: #000; }
-    .btn-cancel { background: #334155; color: #fff; }
-    .btn:hover { transform: scale(1.05); }
-
-    /* --- The Magic Animations --- */
-    @keyframes oceanFlow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    @keyframes auraBreathe {
-        0% { transform: scale(0.85); opacity: 0.5; }
-        100% { transform: scale(1.2); opacity: 1; }
-    }
-
-    @keyframes constructionWave {
-        100% { background-position: 20px 20px; }
-    }
-            /* Add this to your @keyframes at the bottom of the CSS */
-    @keyframes hazardFlow {
-        0% { background-position: 0 0; }
-        /* 32px is a multiple of the 16px stripe width, creating a perfectly seamless loop */
-        100% { background-position: -32px 32px; } 
-    }
-</style>
-
-    
+        /* Animations */
+        @keyframes oceanFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes auraBreathe { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
+        @keyframes moltenFlow { 0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 100%; } }
+    </style>
 </head>
 <body>
 
-    <header style="text-align:center; margin-bottom:50px;">
-        <h1 style="font-size: 2.5rem; letter-spacing: -1px;">COMMUNITY<span style="color:var(--accent-blue)">HUB</span></h1>
-        <p style="opacity: 0.5; font-size: 0.9rem;">Direct access to our verified channels and clans</p>
+    <header>
+        <h1>COMMUNITY<span style="color:var(--accent-blue)">HUB</span></h1>
+        <p>Dynamic Access Portal</p>
     </header>
     
-    <div id="container">
-        </div>
+    <div id="container"></div>
 
     <script>
-        const container = document.getElementById('container');
+        // Place this in a file named data.json on your server/GitHub
+        const fallbackData = [
+            { "name": "Hay Day Elite", "desc": "Active traders only!", "img": "https://placehold.co/80/00ff88/000000?text=HD", "color": "#00ff88", "status": "active", "link": "#" },
+            { "name": "Dev Zone", "desc": "Rebuilding the core system.", "img": "https://placehold.co/80/ffd700/000000?text=FIX", "color": "#ffd700", "status": "construction", "link": "#" },
+            { "name": "Support", "desc": "Semi-active staff.", "img": "https://placehold.co/80/ff5e00/ffffff?text=SUP", "color": "#ff5e00", "status": "semi", "link": "#" },
+            { "name": "Archived", "desc": "Legacy channel.", "img": "https://placehold.co/80/334155/ffffff?text=OLD", "color": "#94a3b8", "status": "inactive", "link": "#" }
+        ];
 
-        // Fetch the JSON file
-        async function loadCards() {
+        async function init() {
             try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                
-                container.innerHTML = data.map((item, index) => `
-                    <div class="card" onclick="openOverlay(${index})" id="card-${index}">
-                        <img src="${item.img}" class="card-img" style="border-color: ${item.color}">
-                        <div class="card-info">
-                            <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
-                            <p class="card-desc">${item.desc}</p>
-                            <div class="status-row">
-                                <div class="dot status-${item.status}"></div>
-                                <span>${item.status.toUpperCase()}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="overlay">
-                            <button class="btn btn-go" onclick="goToLink('${item.link}', event)">CONFIRM</button>
-                            <button class="btn btn-cancel" onclick="closeOverlay(${index}, event)">CANCEL</button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                container.innerHTML = `<p style="color:red">Error loading data.json. Check file path.</p>`;
+                const res = await fetch('data.json');
+                const data = await res.json();
+                render(data);
+            } catch {
+                render(fallbackData);
             }
         }
 
-        function openOverlay(index) {
-            document.getElementById(`card-${index}`).classList.add('active-state');
+        function render(data) {
+            document.getElementById('container').innerHTML = data.map((item, i) => `
+                <div class="card" onclick="openCard(${i})" id="card-${i}">
+                    <img src="${item.img}" class="card-img" style="border-color:${item.color}">
+                    <div class="card-info">
+                        <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
+                        <p class="card-desc">${item.desc}</p>
+                        <div class="status-row">
+                            <div class="dot status-${item.status}"></div>
+                            <span>${item.status}</span>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <button class="btn btn-go" onclick="window.open('${item.link}', '_blank')">CONFIRM</button>
+                        <button class="btn btn-cancel" onclick="closeCard(${i}, event)">CANCEL</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function closeOverlay(index, e) {
-            e.stopPropagation();
-            document.getElementById(`card-${index}`).classList.remove('active-state');
-        }
+        function openCard(i) { document.getElementById(`card-${i}`).classList.add('active-state'); }
+        function closeCard(i, e) { e.stopPropagation(); document.getElementById(`card-${i}`).classList.remove('active-state'); }
 
-        function goToLink(url, e) {
-            e.stopPropagation();
-            if(url !== "#") window.open(url, '_blank');
-        }
-
-        loadCards();
+        init();
     </script>
 </body>
 </html>
