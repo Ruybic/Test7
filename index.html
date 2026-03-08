@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Portal</title>
+    <style>
+        :root {
+            --bg-dark: #070b14;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --text-main: #f8fafc;
+            --accent-blue: #38bdf8;
+            /* Status Colors */
+            --status-green: #00ff88;
+            --status-yellow: #ffd700;
+            --status-black: #000000;
+            --status-white: #ffffff;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 50px 20px;
+        }
+
+        #container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* --- Card Design --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* The Scale Down Effect */
+        .card.active-state {
+            transform: scale(0.94);
+            filter: brightness(0.7);
+        }
+
+        .card-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .card-info { flex: 1; }
+        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
+
+        /* --- Status Dots & Glowing Aura --- */
+        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
+        
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+        }
+
+        /* The Rotating Aura */
+        .dot::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1.5px solid transparent;
+            border-top-color: inherit;
+            animation: rotateAura 2s linear infinite;
+        }
+
+        .status-active { background: var(--status-green); border-top-color: var(--status-green); box-shadow: 0 0 15px var(--status-green); }
+        .status-semi { background: var(--status-yellow); border-top-color: var(--status-yellow); box-shadow: 0 0 15px var(--status-yellow); }
+        .status-inactive { background: var(--status-black); border: 1px solid #333; border-top-color: #444; }
+        .status-unknown { background: var(--status-white); border-top-color: var(--status-white); box-shadow: 0 0 10px var(--status-white); }
+        
+        .status-construction {
+            background: linear-gradient(45deg, #fff 25%, #000 25%, #000 50%, #fff 50%, #fff 75%, #000 75%, #000);
+            background-size: 8px 8px;
+            animation: stripeSlide 0.6s linear infinite;
+            border-top-color: #fff;
+        }
+
+        /* --- Confirmation Overlay --- */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7, 11, 20, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .card.active-state .overlay { opacity: 1; pointer-events: all; }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn-go { background: var(--accent-blue); color: #000; }
+        .btn-cancel { background: #334155; color: #fff; }
+        .btn:hover { transform: scale(1.05); }
+
+        @keyframes rotateAura { to { transform: rotate(360deg); } }
+        @keyframes stripeSlide { from { background-position: 0 0; } to { background-position: 8px 8px; } }
+    </style>
+</head>
+<body>
+
+    <header style="text-align:center; margin-bottom:50px;">
+        <h1 style="font-size: 2.5rem; letter-spacing: -1px;">COMMUNITY<span style="color:var(--accent-blue)">HUB</span></h1>
+        <p style="opacity: 0.5; font-size: 0.9rem;">Direct access to our verified channels and clans</p>
+    </header>
+    
+    <div id="container">
+        </div>
+
+    <script>
+        const container = document.getElementById('container');
+
+        // Fetch the JSON file
+        async function loadCards() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                container.innerHTML = data.map((item, index) => `
+                    <div class="card" onclick="openOverlay(${index})" id="card-${index}">
+                        <img src="${item.img}" class="card-img" style="border-color: ${item.color}">
+                        <div class="card-info">
+                            <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
+                            <p class="card-desc">${item.desc}</p>
+                            <div class="status-row">
+                                <div class="dot status-${item.status}"></div>
+                                <span>${item.status.toUpperCase()}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="overlay">
+                            <button class="btn btn-go" onclick="goToLink('${item.link}', event)">CONFIRM</button>
+                            <button class="btn btn-cancel" onclick="closeOverlay(${index}, event)">CANCEL</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<p style="color:red">Error loading data.json. Check file path.</p>`;
+            }
+        }
+
+        function openOverlay(index) {
+            document.getElementById(`card-${index}`).classList.add('active-state');
+        }
+
+        function closeOverlay(index, e) {
+            e.stopPropagation();
+            document.getElementById(`card-${index}`).classList.remove('active-state');
+        }
+
+        function goToLink(url, e) {
+            e.stopPropagation();
+            if(url !== "#") window.open(url, '_blank');
+        }
+
+        loadCards();
+    </script>
+</body>
+</html>
