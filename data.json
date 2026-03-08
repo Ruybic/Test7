@@ -1,26 +1,42 @@
 [
   {
-    "name": "Hay Day Clan",
-    "desc": "Active traders only! Join our level 50+ neighborhood for weekly derbies.",
-    "img": "https://placehold.jp/24/38bdf8/ffffff/80x80.png?text=HD",
-    "color": "#fbbf24",
+    "name": "Hay Day Elite",
+    "desc": "Our main active clan. Level 50+ traders joining daily.",
+    "img": "https://placehold.co/80/0ea5e9/ffffff?text=HD",
+    "color": "#0ea5e9",
     "status": "active",
     "link": "https://t.me/your_link"
   },
   {
-    "name": "Under Maintenance",
-    "desc": "We are currently updating our server scripts. Check back soon!",
-    "img": "https://placehold.jp/24/1e293b/ffffff/80x80.png?text=FIX",
-    "color": "#94a3b8",
-    "status": "construction",
+    "name": "Support Channel",
+    "desc": "Staff is currently semi-active. Response times may vary.",
+    "img": "https://placehold.co/80/ff5e00/ffffff?text=SUP",
+    "color": "#ff5e00",
+    "status": "semi",
+    "link": "https://t.me/your_link"
+  },
+  {
+    "name": "Legacy Vault",
+    "desc": "Old archived scripts and tools. No longer updated.",
+    "img": "https://placehold.co/80/334155/ffffff?text=ARC",
+    "color": "#334155",
+    "status": "inactive",
     "link": "#"
   },
   {
-    "name": "Support Channel",
-    "desc": "Need help? Our staff is semi-active during European hours.",
-    "img": "https://placehold.jp/24/0088cc/ffffff/80x80.png?text=TG",
-    "color": "#0088cc",
-    "status": "semi",
-    "link": "https://t.me/your_support"
+    "name": "Server Status",
+    "desc": "Ping currently failing. Waiting for network response.",
+    "img": "https://placehold.co/80/ffffff/000000?text=???",
+    "color": "#ffffff",
+    "status": "unknown",
+    "link": "#"
+  },
+  {
+    "name": "Beta Web Portal",
+    "desc": "We are currently rebuilding the UI. Expect layout bugs!",
+    "img": "https://placehold.co/80/ffd700/000000?text=DEV",
+    "color": "#ffd700",
+    "status": "construction",
+    "link": "#"
   }
 ]
