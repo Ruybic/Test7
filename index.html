@@ -3,21 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Portal</title>
+    <title>Heaven501 Hub</title>
     <style>
+        /* --- CSS Variables & Theming --- */
         :root {
-            --bg-dark: #070b14;
+            --bg-main: #070b14;
+            --bg-gradient: radial-gradient(circle at top, #111827 0%, var(--bg-main) 100%);
             --card-bg: rgba(15, 23, 42, 0.6);
             --text-main: #f8fafc;
+            --text-muted: #94a3b8;
             --accent-blue: #38bdf8;
-            --status-green: #00ff88;
-            --status-yellow: #ffd700;
-            --status-black: #000000;
-            --status-white: #ffffff;
+            --tag-bg: rgba(56, 189, 248, 0.2);
+            --code-bg: #0f172a;
+            --highlight-501: rgba(255, 215, 0, 0.15);
+            --highlight-border: #ffd700;
+        }
+
+        /* Light Theme Override */
+        body.theme-light {
+            --bg-main: #f0f4f8;
+            --bg-gradient: radial-gradient(circle at top, #ffffff 0%, var(--bg-main) 100%);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent-blue: #0284c7;
+            --tag-bg: rgba(2, 132, 199, 0.1);
+            --code-bg: #e2e8f0;
         }
 
         body {
-            background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
+            background: var(--bg-gradient);
             color: var(--text-main);
             font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
@@ -25,116 +40,133 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 50px 20px;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        header { text-align: center; margin-bottom: 50px; }
-        header h1 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 5px; }
-        header p { opacity: 0.5; font-size: 0.9rem; }
-
-        #container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 20px;
+        /* --- Header & Navigation --- */
+        header {
             width: 100%;
-            max-width: 1100px;
-        }
-
-        /* --- Card Styling --- */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
             padding: 20px;
+            box-sizing: border-box;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .brand {
             display: flex;
             align-items: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-right: 40px;
+            flex-shrink: 0;
         }
 
-        .card.active-state { transform: scale(0.94); filter: brightness(0.7); }
+        .brand img { width: 40px; height: 40px; border-radius: 8px; margin-right: 12px; }
+        .brand h1 { font-size: 1.8rem; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; }
+        .brand h1 .heaven { color: var(--accent-blue); }
+        .brand h1 .five-o-one { color: var(--text-main); }
 
-        .card-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 15px;
-            object-fit: cover;
-            margin-right: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
+        nav {
+            flex: 1;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none; /* Firefox */
+        }
+        nav::-webkit-scrollbar { display: none; } /* Chrome */
+        
+        .nav-list {
+            list-style: none; padding: 0; margin: 0; display: flex; gap: 20px;
+        }
+        .nav-list li {
+            cursor: pointer; font-weight: 600; color: var(--text-muted); transition: 0.3s; padding: 5px 10px; border-radius: 8px;
+        }
+        .nav-list li:hover { color: var(--text-main); }
+        .nav-list li.active { color: var(--text-main); background: var(--tag-bg); }
+
+        /* --- Main Content Area --- */
+        #content-area {
+            width: 100%; max-width: 1100px; padding: 0 20px 100px 20px; box-sizing: border-box;
         }
 
+        /* Grid for Cards (Connect, Projects, Admin) */
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;
+        }
+
+        /* --- Card Styling (Retained & Enhanced) --- */
+        .card {
+            background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px; padding: 20px; display: flex; align-items: center; position: relative;
+            overflow: hidden; transition: 0.3s; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+        .card-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-right: 20px; }
         .card-info { flex: 1; }
-        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
-        .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
-
-        /* --- Status Dots (Liquid Sea Motion) --- */
-        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; }
+        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; }
+        .card-desc { font-size: 0.85rem; color: var(--text-muted); margin: 6px 0; line-height: 1.5; }
         
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 15px;
-            position: relative;
-            z-index: 1;
-            background-size: 300% 300%; 
-            animation: oceanFlow 4s ease infinite;
+        /* Tags (Sponsored/Recommended) */
+        .badge {
+            position: absolute; top: 15px; right: 15px; background: var(--tag-bg); color: var(--accent-blue);
+            padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--accent-blue);
         }
 
-        .dot::before {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            z-index: -1;
-            filter: blur(8px);
-            background: inherit;
-            background-size: 300% 300%;
-            animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate;
-        }
-
+        /* Liquid Status Dots */
+        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; position: relative; z-index: 1; background-size: 300% 300%; animation: oceanFlow 4s ease infinite; }
+        .dot::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; z-index: -1; filter: blur(8px); background: inherit; background-size: 300% 300%; animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate; }
         .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
-        .status-semi { background-image: linear-gradient(135deg, #ffd700, #ff5e00, #ffd700); }
-        .status-inactive { background-image: linear-gradient(135deg, #0f172a, #334155, #0f172a); border: 1px solid #1e293b; }
-        .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
+        .status-construction { background: radial-gradient(circle at center, #ffd700, #8b6b00, #000000); background-size: 200% 200%; animation: moltenFlow 3s ease-in-out infinite alternate; }
+
+        /* --- Dev Section Code Formatting --- */
+        .code-block-wrapper {
+            background: var(--code-bg); border-radius: 12px; padding: 20px; position: relative; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .code-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; font-weight: bold; color: var(--accent-blue);
+        }
+        .copy-btn {
+            background: rgba(255,255,255,0.1); border: none; color: var(--text-main); padding: 5px 15px; border-radius: 6px; cursor: pointer; transition: 0.2s;
+        }
+        .copy-btn:hover { background: var(--accent-blue); color: #000; }
+        pre { margin: 0; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
         
-        /* The New Molten Liquid Construction Status */
-        .status-construction {
-            background: radial-gradient(circle at center, #ffd700, #8b6b00, #000000);
-            background-size: 200% 200%;
-            animation: moltenFlow 3s ease-in-out infinite alternate;
+        /* Custom <501> Tag Styling */
+        .tag-501 {
+            background: var(--highlight-501); border: 1px dashed var(--highlight-border); padding: 2px 6px; border-radius: 4px; color: var(--highlight-border); display: inline-block;
         }
 
-        /* --- Overlay --- */
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(7, 11, 20, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+        /* --- FAQ Section --- */
+        .faq-item {
+            background: var(--card-bg); margin-bottom: 10px; border-radius: 10px; padding: 15px 20px; border: 1px solid rgba(255,255,255,0.05);
         }
-        .card.active-state .overlay { opacity: 1; pointer-events: all; }
+        .faq-q { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; color: var(--accent-blue); }
+        .faq-a { font-size: 0.9rem; color: var(--text-muted); }
 
-        .btn {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+        /* --- Floating Controls (Bottom Right) --- */
+        .floating-controls {
+            position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center; z-index: 100;
         }
-        .btn-go { background: var(--accent-blue); color: #000; }
-        .btn-cancel { background: #334155; color: #fff; }
+        
+        /* Scroll Ring */
+        .scroll-ring-container {
+            position: relative; width: 50px; height: 50px; cursor: pointer; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .scroll-ring-container.visible { opacity: 1; pointer-events: all; }
+        .scroll-ring-svg { transform: rotate(-90deg); width: 50px; height: 50px; }
+        .scroll-ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 4; }
+        .scroll-ring-progress { fill: none; stroke: var(--accent-blue); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.1s; }
+        .scroll-arrow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-main); font-weight: bold; font-size: 1.2rem; pointer-events: none;
+        }
+
+        /* Theme Toggles */
+        .theme-toggles { display: flex; gap: 10px; background: var(--card-bg); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .theme-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .theme-btn.dark { background: #070b14; border-color: rgba(255,255,255,0.3); }
+        .theme-btn.light { background: #f0f4f8; border-color: rgba(0,0,0,0.3); }
+        .theme-btn:hover { transform: scale(1.1); }
 
         /* Animations */
         @keyframes oceanFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -145,34 +177,97 @@
 <body>
 
     <header>
-        <h1>Heaven<span style="color:var(--accent-blue)">Link</span></h1>
-        <p>Connect to Heaven! anywhere! anytime!</p>
+        <div class="brand">
+            <img src="https://placehold.co/100/38bdf8/000000?text=H" alt="Logo">
+            <h1><span class="heaven">Heaven</span><span class="five-o-one">501</span></h1>
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li onclick="loadTab('faqs')" id="nav-faqs" class="active">FAQs</li>
+                <li onclick="loadTab('projects')" id="nav-projects">Projects</li>
+                <li onclick="loadTab('connect')" id="nav-connect">Connect</li>
+                <li onclick="loadTab('dev')" id="nav-dev">Dev</li>
+                <li onclick="loadTab('admin')" id="nav-admin">Admin</li>
+            </ul>
+        </nav>
     </header>
-    
-    <div id="container"></div>
+
+    <main id="content-area">
+        </main>
+
+    <div class="floating-controls">
+        <div class="scroll-ring-container" id="scroll-top-btn" onclick="scrollToTop()">
+            <svg class="scroll-ring-svg">
+                <circle class="scroll-ring-bg" cx="25" cy="25" r="20"></circle>
+                <circle class="scroll-ring-progress" id="scroll-progress" cx="25" cy="25" r="20" stroke-dasharray="125.6" stroke-dashoffset="125.6"></circle>
+            </svg>
+            <div class="scroll-arrow">↑</div>
+        </div>
+
+        <div class="theme-toggles">
+            <div class="theme-btn dark" onclick="setTheme('dark')" title="Dark Mode"></div>
+            <div class="theme-btn light" onclick="setTheme('light')" title="Light Mode"></div>
+        </div>
+    </div>
 
     <script>
-        // Place this in a file named data.json on your server/GitHub
-        const fallbackData = [
-            { "name": "Hay Day Elite", "desc": "Active traders only!", "img": "https://placehold.co/80/00ff88/000000?text=HD", "color": "#00ff88", "status": "active", "link": "#" },
-            { "name": "Dev Zone", "desc": "Rebuilding the core system.", "img": "https://placehold.co/80/ffd700/000000?text=FIX", "color": "#ffd700", "status": "construction", "link": "#" },
-            { "name": "Support", "desc": "Semi-active staff.", "img": "https://placehold.co/80/ff5e00/ffffff?text=SUP", "color": "#ff5e00", "status": "semi", "link": "#" },
-            { "name": "Archived", "desc": "Legacy channel.", "img": "https://placehold.co/80/334155/ffffff?text=OLD", "color": "#94a3b8", "status": "inactive", "link": "#" }
-        ];
+        // ==========================================
+        // SIMULATED JSON DATABASES
+        // In reality, you would fetch these from separate .json files
+        // ==========================================
+        const db = {
+            faqs: [
+                { q: "What is Heaven501?", a: "Heaven501 is the ultimate community hub linking traders, devs, and administrators." },
+                { q: "How do I get a 'Recommended' tag?", a: "Tags are distributed manually by Admins based on community trust and activity." }
+            ],
+            connect: [
+                { name: "Hay Day Elite", desc: "Active traders only!", img: "https://placehold.co/80/00ff88/000?text=HD", color: "#00ff88", status: "active", tag: "Recommended" },
+                { name: "Support Portal", desc: "Semi-active staff.", img: "https://placehold.co/80/ff5e00/fff?text=SUP", color: "#ff5e00", status: "construction", tag: "Sponsored" }
+            ],
+            projects: [
+                { name: "Project Alpha", desc: "Next-gen bot integration.", img: "https://placehold.co/80/38bdf8/000?text=PA", color: "#38bdf8", status: "active", tag: "Beta" }
+            ],
+            admin: [
+                { name: "SysAdmin Zero", desc: "Infrastructure Overseer", img: "https://placehold.co/80/ff0055/fff?text=SA", color: "#ff0055", status: "active", tag: "Owner" }
+            ],
+            dev: [
+                { 
+                    title: "Telegram Bot Initialization", 
+                    language: "python",
+                    code: `import telebot\n\n# Initialize bot with your secure token\nbot = telebot.TeleBot("<501>Insert your bot token here (get this through @botfather on telegram)</501>")\n\n@bot.message_handler(commands=['start'])\ndef send_welcome(message):\n    bot.reply_to(message, "Welcome to Heaven501!")\n\nbot.infinity_polling()`
+                }
+            ]
+        };
 
-        async function init() {
-            try {
-                const res = await fetch('data.json');
-                const data = await res.json();
-                render(data);
-            } catch {
-                render(fallbackData);
-            }
+        // ==========================================
+        // RENDER FUNCTIONS
+        // ==========================================
+        const contentArea = document.getElementById('content-area');
+
+        function loadTab(tabName) {
+            // Update Nav UI
+            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
+            document.getElementById(`nav-${tabName}`).classList.add('active');
+
+            // Route to correct renderer
+            if (tabName === 'faqs') renderFAQs(db.faqs);
+            else if (tabName === 'dev') renderDev(db.dev);
+            else renderCards(db[tabName]); // For Connect, Projects, Admin
         }
 
-        function render(data) {
-            document.getElementById('container').innerHTML = data.map((item, i) => `
-                <div class="card" onclick="openCard(${i})" id="card-${i}">
+        function renderFAQs(data) {
+            contentArea.innerHTML = data.map(item => `
+                <div class="faq-item">
+                    <div class="faq-q">${item.q}</div>
+                    <div class="faq-a">${item.a}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderCards(data) {
+            contentArea.innerHTML = `<div class="grid-container">` + data.map(item => `
+                <div class="card">
+                    ${item.tag ? `<div class="badge">${item.tag}</div>` : ''}
                     <img src="${item.img}" class="card-img" style="border-color:${item.color}">
                     <div class="card-info">
                         <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
@@ -182,18 +277,82 @@
                             <span>${item.status}</span>
                         </div>
                     </div>
-                    <div class="overlay">
-                        <button class="btn btn-go" onclick="window.open('${item.link}', '_blank')">CONFIRM</button>
-                        <button class="btn btn-cancel" onclick="closeCard(${i}, event)">CANCEL</button>
-                    </div>
                 </div>
-            `).join('');
+            `).join('') + `</div>`;
         }
 
-        function openCard(i) { document.getElementById(`card-${i}`).classList.add('active-state'); }
-        function closeCard(i, e) { e.stopPropagation(); document.getElementById(`card-${i}`).classList.remove('active-state'); }
+        function renderDev(data) {
+            contentArea.innerHTML = data.map((item, index) => {
+                // Parse the custom <501> tags into spans for styling
+                // We use Regex to find <501>...</501> and replace it with standard HTML
+                const formattedCode = item.code
+                    .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML first
+                    .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>'); // Apply custom style
 
-        init();
+                return `
+                    <div class="code-block-wrapper">
+                        <div class="code-header">
+                            <span>${item.title}</span>
+                            <button class="copy-btn" onclick="copyCode(this, \`${item.code.replace(/`/g, '\\`')}\`)">Copy Code</button>
+                        </div>
+                        <pre><code>${formattedCode}</code></pre>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // UTILITIES & INTERACTIONS
+        // ==========================================
+
+        // Copy Code Function
+        function copyCode(btn, rawCode) {
+            // Strip the <501> tags for the clipboard so the user gets valid code
+            const cleanCode = rawCode.replace(/<501>/g, '').replace(/<\/501>/g, '');
+            navigator.clipboard.writeText(cleanCode).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                btn.style.background = "var(--status-green)";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "";
+                }, 2000);
+            });
+        }
+
+        // Theme Switcher
+        function setTheme(theme) {
+            if (theme === 'light') document.body.classList.add('theme-light');
+            else document.body.classList.remove('theme-light');
+        }
+
+        // Scroll Progress Ring Logic
+        const scrollBtn = document.getElementById('scroll-top-btn');
+        const scrollProgress = document.getElementById('scroll-progress');
+        const circumference = 125.6; // 2 * pi * r (where r=20)
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            
+            // Show/Hide Button
+            if (scrollTop > 100) scrollBtn.classList.add('visible');
+            else scrollBtn.classList.remove('visible');
+
+            // Update Progress Ring
+            if (docHeight > 0) {
+                const scrollPercent = scrollTop / docHeight;
+                const offset = circumference - (scrollPercent * circumference);
+                scrollProgress.style.strokeDashoffset = offset;
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize default tab
+        loadTab('faqs');
     </script>
 </body>
 </html>
