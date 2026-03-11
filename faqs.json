@@ -1,1 +1,10 @@
-
+[
+    { 
+        "q": "What is Heaven501?", 
+        "a": "Heaven501 is the ultimate community hub linking traders, devs, and administrators." 
+    },
+    { 
+        "q": "How do I get a 'Recommended' tag?", 
+        "a": "Tags are distributed manually by Admins based on community trust and activity." 
+    }
+]
