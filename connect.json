@@ -1,0 +1,18 @@
+[
+    { 
+        "name": "Hay Day Elite", 
+        "desc": "Active traders only!", 
+        "img": "https://placehold.co/80/00ff88/000?text=HD", 
+        "color": "#00ff88", 
+        "status": "active", 
+        "tag": "Recommended" 
+    },
+    { 
+        "name": "Support Portal", 
+        "desc": "Semi-active staff.", 
+        "img": "https://placehold.co/80/ff5e00/fff?text=SUP", 
+        "color": "#ff5e00", 
+        "status": "construction", 
+        "tag": "Sponsored" 
+    }
+]
