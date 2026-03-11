@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heaven501 Hub</title>
     <style>
+        /* --- Core Variables --- */
         :root {
-            --bg-main: #070b14;
-            --bg-gradient: radial-gradient(circle at top, #111827 0%, var(--bg-main) 100%);
+            --bg-dark: #070b14;
             --card-bg: rgba(15, 23, 42, 0.6);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -18,9 +18,9 @@
             --highlight-border: #ffd700;
         }
 
+        /* Light Theme Override */
         body.theme-light {
-            --bg-main: #f0f4f8;
-            --bg-gradient: radial-gradient(circle at top, #ffffff 0%, var(--bg-main) 100%);
+            --bg-dark: #f0f4f8;
             --card-bg: rgba(255, 255, 255, 0.8);
             --text-main: #0f172a;
             --text-muted: #475569;
@@ -30,7 +30,7 @@
         }
 
         body {
-            background: var(--bg-gradient);
+            background: radial-gradient(circle at top, #111827 0%, var(--bg-dark) 100%);
             color: var(--text-main);
             font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
@@ -38,10 +38,10 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            transition: 0.5s;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* --- Header & Horizontal Nav --- */
+        /* --- Header & Navigation --- */
         header {
             width: 100%;
             max-width: 1200px;
@@ -53,6 +53,7 @@
             top: 0;
             z-index: 1000;
             background: inherit;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .brand {
@@ -70,7 +71,7 @@
             flex: 1;
             overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
         nav::-webkit-scrollbar { display: none; }
 
@@ -93,18 +94,276 @@
         }
         .nav-list li.active { background: var(--tag-bg); color: var(--accent-blue); }
 
-        /* --- Grid & Cards --- */
-        #content-area { width: 100%; max-width: 1100px; padding: 40px 20px; box-sizing: border-box; }
+        /* --- Content Layout --- */
+        #content-area { width: 100%; max-width: 1100px; padding: 40px 20px 100px 20px; box-sizing: border-box; }
         
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 20px;
+            margin-bottom: 40px;
         }
 
         .section-title {
             width: 100%;
             opacity: 0.6;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0 0 20px 0;
+        }
+
+        /* --- Card Styling & Blackout Overlay --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card:hover { border-color: rgba(255,255,255,0.2); }
+        .card.active-state { transform: scale(0.94); filter: brightness(0.8); border-color: var(--accent-blue); }
+
+        .card-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-right: 20px; border: 2px solid rgba(255,255,255,0.1); }
+        .card-info { flex: 1; }
+        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-desc { font-size: 0.85rem; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
+        .badge { position: absolute; top: 15px; right: 15px; background: var(--tag-bg); color: var(--accent-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7, 11, 20, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .card.active-state .overlay { opacity: 1; pointer-events: all; }
+
+        .btn { padding: 10px 20px; border-radius: 10px; border: none; font-size: 0.8rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-view { background: var(--accent-blue); color: #000; }
+        .btn-cancel { background: #334155; color: #fff; }
+
+        /* --- Status Dots (Liquid Sea Motion) --- */
+        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; position: relative; z-index: 1; background-size: 300% 300%; animation: oceanFlow 4s ease infinite; }
+        .dot::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; z-index: -1; filter: blur(8px); background: inherit; background-size: 300% 300%; animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate; }
+
+        .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
+        .status-semi { background-image: linear-gradient(135deg, #ffd700, #ff5e00, #ffd700); }
+        .status-inactive { background-image: linear-gradient(135deg, #0f172a, #334155, #0f172a); border: 1px solid #1e293b; }
+        .status-unknown { background-image: linear-gradient(135deg, #ffffff, #94a3b8, #ffffff); }
+        .status-construction { background: radial-gradient(circle at center, #ffd700, #8b6b00, #000000); background-size: 200% 200%; animation: moltenFlow 3s ease-in-out infinite alternate; }
+
+        /* --- FAQ Accordion --- */
+        .faq-item { background: var(--card-bg); margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; transition: 0.3s; }
+        .faq-q { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--accent-blue); user-select: none; }
+        .faq-q::after { content: '+'; font-size: 1.5rem; transition: transform 0.3s ease; }
+        .faq-item.open .faq-q::after { transform: rotate(45deg); }
+        .faq-a { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); line-height: 1.6; }
+        .faq-item.open .faq-a { max-height: 200px; padding-bottom: 20px; opacity: 1; }
+
+        /* --- Dev Section Code Formatting --- */
+        .code-block-wrapper { background: var(--code-bg); border-radius: 12px; padding: 20px; position: relative; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; font-weight: bold; color: var(--accent-blue); }
+        .copy-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); padding: 5px 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .copy-btn:hover { background: var(--accent-blue); color: #000; }
+        pre { margin: 0; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
+        .tag-501 { background: var(--highlight-501); border: 1px dashed var(--highlight-border); padding: 2px 6px; border-radius: 4px; color: var(--highlight-border); display: inline-block; }
+
+        /* --- Floating Controls --- */
+        .floating-controls { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center; z-index: 100; }
+        .scroll-ring-container { width: 45px; height: 45px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); opacity: 0; pointer-events: none; transition: 0.3s; font-weight: bold; }
+        .scroll-ring-container.visible { opacity: 1; pointer-events: all; }
+        .theme-toggles { display: flex; gap: 10px; background: var(--card-bg); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .theme-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .theme-btn.dark { background: #070b14; border-color: rgba(255,255,255,0.3); }
+        .theme-btn.light { background: #f0f4f8; border-color: rgba(0,0,0,0.3); }
+
+        /* Animations */
+        @keyframes oceanFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes auraBreathe { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
+        @keyframes moltenFlow { 0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 100%; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://placehold.co/100/38bdf8/000000?text=H" alt="Logo">
+            <h1><span class="blue">Heaven</span><span class="white">501</span></h1>
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li onclick="loadTab('faqs')" id="nav-faqs">FAQs</li>
+                <li onclick="loadTab('projects')" id="nav-projects">Projects</li>
+                <li onclick="loadTab('connect')" id="nav-connect">Connect</li>
+                <li onclick="loadTab('dev')" id="nav-dev">Dev</li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="content-area"></main>
+
+    <div class="floating-controls">
+        <div class="scroll-ring-container" id="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</div>
+        <div class="theme-toggles">
+            <div class="theme-btn dark" onclick="setTheme('dark')"></div>
+            <div class="theme-btn light" onclick="setTheme('light')"></div>
+        </div>
+    </div>
+
+    <script>
+        const contentArea = document.getElementById('content-area');
+
+        // --- LOCAL BACKUP DATA (Includes all specific statuses) ---
+        const localDB = {
+            faqs: [
+                { q: "What is Heaven501?", a: "The ultimate community hub linking traders, devs, and administrators." },
+                { q: "How are tags distributed?", a: "Tags are manually assigned by Admins based on community trust." }
+            ],
+            connect: {
+                community: [
+                    { name: "Hay Day Elite", desc: "Active traders only!", img: "https://placehold.co/80/00ff88/000?text=HD", color: "#00ff88", status: "active", tag: "Recommended", link: "#" },
+                    { name: "Support", desc: "Semi-active staff.", img: "https://placehold.co/80/ff5e00/fff?text=SUP", color: "#ff5e00", status: "semi", tag: "", link: "#" },
+                    { name: "Archived", desc: "Legacy channel.", img: "https://placehold.co/80/334155/fff?text=OLD", color: "#94a3b8", status: "inactive", tag: "", link: "#" }
+                ],
+                admins: [
+                    { name: "SysAdmin Zero", desc: "Infrastructure Overseer", img: "https://placehold.co/80/ff0055/fff?text=SA", color: "#ff0055", status: "active", tag: "Owner", link: "#" },
+                    { name: "Dev Zone", desc: "Rebuilding the core system.", img: "https://placehold.co/80/ffd700/000?text=FIX", color: "#ffd700", status: "construction", tag: "Dev", link: "#" }
+                ]
+            },
+            projects: [
+                { name: "JSONovel Engine", desc: "Custom visual novel engine workflow.", img: "https://placehold.co/80/38bdf8/000?text=JS", color: "#38bdf8", status: "construction", tag: "Alpha", link: "#" },
+                { name: "Unknown Data", desc: "Awaiting synchronization.", img: "https://placehold.co/80/ffffff/000?text=?", color: "#ffffff", status: "unknown", tag: "", link: "#" }
+            ],
+            dev: [
+                { title: "Bot Initialization", code: "import telebot\nbot = telebot.TeleBot(\"<501>INSERT_TOKEN</501>\")\nbot.infinity_polling()" }
+            ]
+        };
+
+        async function loadTab(tabName) {
+            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
+            document.getElementById(`nav-${tabName}`).classList.add('active');
+            contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Loading modules...</p>';
+
+            try {
+                // Tries to fetch JSON if hosted. Will fail to localDB if testing locally.
+                const response = await fetch(`${tabName}.json`);
+                if (!response.ok) throw new Error("File not found");
+                const data = await response.json();
+                routeRenderer(tabName, data);
+            } catch (error) {
+                console.warn(`Local fetch blocked or missing. Booting fallback for ${tabName}.`);
+                routeRenderer(tabName, localDB[tabName]);
+            }
+        }
+
+        function routeRenderer(tabName, data) {
+            if (tabName === 'faqs') renderFAQs(data);
+            else if (tabName === 'dev') renderDev(data);
+            else if (tabName === 'connect') renderConnect(data);
+            else renderProjects(data); // standard flat grid
+        }
+
+        function renderFAQs(data) {
+            contentArea.innerHTML = data.map((item, i) => `
+                <div class="faq-item" onclick="this.classList.toggle('open')">
+                    <div class="faq-q">${item.q}</div>
+                    <div class="faq-a">${item.a}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderConnect(data) {
+            let html = '<h3 class="section-title">Community Portal</h3>';
+            html += `<div class="grid-container">${generateCards(data.community)}</div>`;
+            html += '<h3 class="section-title">Admin Personals</h3>';
+            html += `<div class="grid-container">${generateCards(data.admins)}</div>`;
+            contentArea.innerHTML = html;
+        }
+
+        function renderProjects(data) {
+            contentArea.innerHTML = `<div class="grid-container">${generateCards(data)}</div>`;
+        }
+
+        function generateCards(items) {
+            return items.map(item => {
+                const id = 'card-' + Math.random().toString(36).substr(2, 6);
+                return `
+                <div class="card" id="${id}" onclick="openCard('${id}')">
+                    ${item.tag ? `<div class="badge">${item.tag}</div>` : ''}
+                    <img src="${item.img}" class="card-img" style="border-color:${item.color}">
+                    <div class="card-info">
+                        <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
+                        <p class="card-desc">${item.desc}</p>
+                        <div class="status-row">
+                            <div class="dot status-${item.status}"></div>
+                            <span>${item.status}</span>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <button class="btn btn-view" onclick="window.open('${item.link}', '_blank')">VIEW</button>
+                        <button class="btn btn-cancel" onclick="closeCard('${id}', event)">CANCEL</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderDev(data) {
+            contentArea.innerHTML = data.map(item => {
+                const formatted = item.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                                           .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>');
+                return `
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span>${item.title}</span>
+                        <button class="copy-btn" onclick="copyCode(this, \`${item.code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copy Code</button>
+                    </div>
+                    <pre><code>${formatted}</code></pre>
+                </div>`;
+            }).join('');
+        }
+
+        // Card Interaction
+        function openCard(id) { document.getElementById(id).classList.add('active-state'); }
+        function closeCard(id, e) { e.stopPropagation(); document.getElementById(id).classList.remove('active-state'); }
+
+        // Utils
+        function copyCode(btn, rawCode) {
+            const cleanCode = rawCode.replace(/<501>/g, '').replace(/<\/501>/g, '');
+            navigator.clipboard.writeText(cleanCode).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                btn.style.background = "#00ff88"; btn.style.color = "#000";
+                setTimeout(() => { btn.innerText = originalText; btn.style.background = ""; btn.style.color = ""; }, 2000);
+            });
+        }
+
+        function setTheme(t) { t === 'light' ? document.body.classList.add('theme-light') : document.body.classList.remove('theme-light'); }
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top-btn');
+            window.scrollY > 100 ? btn.classList.add('visible') : btn.classList.remove('visible');
+        });
+
+        // Init
+        loadTab('faqs');
+    </script>
+</body>
+</html>
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 2px;
