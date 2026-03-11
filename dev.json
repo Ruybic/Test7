@@ -1,0 +1,7 @@
+[
+    { 
+        "title": "Telegram Bot Initialization", 
+        "language": "python",
+        "code": "import telebot\n\n# Initialize bot with your secure token\nbot = telebot.TeleBot(\"<501>Insert your bot token here (get this through @botfather on telegram)</501>\")\n\n@bot.message_handler(commands=['start'])\ndef send_welcome(message):\n    bot.reply_to(message, \"Welcome to Heaven501!\")\n\nbot.infinity_polling()"
+    }
+]
