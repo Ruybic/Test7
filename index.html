@@ -211,49 +211,37 @@
     </div>
 
     <script>
-        // ==========================================
-        // SIMULATED JSON DATABASES
-        // In reality, you would fetch these from separate .json files
-        // ==========================================
-        const db = {
-            faqs: [
-                { q: "What is Heaven501?", a: "Heaven501 is the ultimate community hub linking traders, devs, and administrators." },
-                { q: "How do I get a 'Recommended' tag?", a: "Tags are distributed manually by Admins based on community trust and activity." }
-            ],
-            connect: [
-                { name: "Hay Day Elite", desc: "Active traders only!", img: "https://placehold.co/80/00ff88/000?text=HD", color: "#00ff88", status: "active", tag: "Recommended" },
-                { name: "Support Portal", desc: "Semi-active staff.", img: "https://placehold.co/80/ff5e00/fff?text=SUP", color: "#ff5e00", status: "construction", tag: "Sponsored" }
-            ],
-            projects: [
-                { name: "Project Alpha", desc: "Next-gen bot integration.", img: "https://placehold.co/80/38bdf8/000?text=PA", color: "#38bdf8", status: "active", tag: "Beta" }
-            ],
-            admin: [
-                { name: "SysAdmin Zero", desc: "Infrastructure Overseer", img: "https://placehold.co/80/ff0055/fff?text=SA", color: "#ff0055", status: "active", tag: "Owner" }
-            ],
-            dev: [
-                { 
-                    title: "Telegram Bot Initialization", 
-                    language: "python",
-                    code: `import telebot\n\n# Initialize bot with your secure token\nbot = telebot.TeleBot("<501>Insert your bot token here (get this through @botfather on telegram)</501>")\n\n@bot.message_handler(commands=['start'])\ndef send_welcome(message):\n    bot.reply_to(message, "Welcome to Heaven501!")\n\nbot.infinity_polling()`
-                }
-            ]
-        };
+        
 
         // ==========================================
         // RENDER FUNCTIONS
         // ==========================================
         const contentArea = document.getElementById('content-area');
 
-        function loadTab(tabName) {
-            // Update Nav UI
-            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
-            document.getElementById(`nav-${tabName}`).classList.add('active');
+        async function loadTab(tabName) {
+    // Update Nav UI
+    document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
+    document.getElementById(`nav-${tabName}`).classList.add('active');
 
-            // Route to correct renderer
-            if (tabName === 'faqs') renderFAQs(db.faqs);
-            else if (tabName === 'dev') renderDev(db.dev);
-            else renderCards(db[tabName]); // For Connect, Projects, Admin
-        }
+    // Show a loading state (optional but good UX)
+    contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Loading...</p>';
+
+    try {
+        // Fetch the corresponding JSON file (e.g., 'connect.json')
+        const response = await fetch(`${tabName}.json`);
+        const data = await response.json();
+
+        // Route to correct renderer
+        if (tabName === 'faqs') renderFAQs(data);
+        else if (tabName === 'dev') renderDev(data);
+        else renderCards(data); // For Connect, Projects, Admin
+
+    } catch (error) {
+        contentArea.innerHTML = `<p style="text-align:center; color:#ff0055;">Error loading ${tabName} data.</p>`;
+        console.error("Fetch error:", error);
+    }
+}
+
 
         function renderFAQs(data) {
             contentArea.innerHTML = data.map(item => `
