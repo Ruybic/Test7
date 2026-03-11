@@ -1,0 +1,10 @@
+[
+    { 
+        "name": "Project Alpha", 
+        "desc": "Next-gen bot integration.", 
+        "img": "https://placehold.co/80/38bdf8/000?text=PA", 
+        "color": "#38bdf8", 
+        "status": "active", 
+        "tag": "Beta" 
+    }
+]
