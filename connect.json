@@ -1,8 +1,12 @@
 {
     "community": [
-        { "name": "Hay Day Elite", "desc": "Active traders only!", "img": "https://placehold.co/80/00ff88/000?text=HD", "color": "#00ff88", "status": "active", "tag": "Recommended", "link": "#" }
+        { "name": "Hay Day Elite", "desc": "Active traders only!", "img": "https://placehold.co/80/00ff88/000?text=HD", "color": "#00ff88", "status": "active", "tag": "Recommended", "link": "#" },
+        { "name": "Support", "desc": "Semi-active staff.", "img": "https://placehold.co/80/ff5e00/fff?text=SUP", "color": "#ff5e00", "status": "semi", "tag": "", "link": "#" },
+        { "name": "Archived", "desc": "Legacy channel.", "img": "https://placehold.co/80/334155/fff?text=OLD", "color": "#94a3b8", "status": "inactive", "tag": "", "link": "#" }
     ],
     "admins": [
-        { "name": "SysAdmin Zero", "desc": "Infrastructure Overseer", "img": "https://placehold.co/80/ff0055/fff?text=SA", "color": "#ff0055", "status": "active", "tag": "Owner", "link": "#" }
+        { "name": "SysAdmin Zero", "desc": "Infrastructure Overseer", "img": "https://placehold.co/80/ff0055/fff?text=SA", "color": "#ff0055", "status": "active", "tag": "Owner", "link": "#" },
+        { "name": "Dev Zone", "desc": "Rebuilding the core system.", "img": "https://placehold.co/80/ffd700/000?text=FIX", "color": "#ffd700", "status": "construction", "tag": "Dev", "link": "#" }
     ]
 }
+
