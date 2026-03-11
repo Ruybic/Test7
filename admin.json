@@ -1,0 +1,10 @@
+[
+    { 
+        "name": "SysAdmin Zero", 
+        "desc": "Infrastructure Overseer", 
+        "img": "https://placehold.co/80/ff0055/fff?text=SA", 
+        "color": "#ff0055", 
+        "status": "active", 
+        "tag": "Owner" 
+    }
+]
