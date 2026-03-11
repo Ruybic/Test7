@@ -105,6 +105,31 @@
         .card-info { flex: 1; }
         .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; }
         .card-desc { font-size: 0.85rem; color: var(--text-muted); margin: 6px 0; line-height: 1.5; }
+
+        /* Overlay Effect */
+.card .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85); /* The Blackout */
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.card.active-state .overlay {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.btn-view { background: var(--accent-blue); color: #000; }
+.btn-cancel { background: #334155; color: #fff; }
+
         
         /* Tags (Sponsored/Recommended) */
         .badge {
@@ -253,67 +278,87 @@
     </div>
 
     <script>
-        
 
-        // ==========================================
+           // ==========================================
         // RENDER FUNCTIONS
         // ==========================================
         const contentArea = document.getElementById('content-area');
 
         async function loadTab(tabName) {
-    // Update Nav UI
-    document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
-    document.getElementById(`nav-${tabName}`).classList.add('active');
+            // Update Nav UI
+            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if (activeNav) activeNav.classList.add('active');
 
-    // Show a loading state (optional but good UX)
-    contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Loading...</p>';
+            // Show a loading state
+            contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Loading...</p>';
 
-    try {
-        // Fetch the corresponding JSON file (e.g., 'connect.json')
-        const response = await fetch(`${tabName}.json`);
-        const data = await response.json();
+            try {
+                const response = await fetch(`${tabName}.json`);
+                const data = await response.json();
 
-        // Route to correct renderer
-        if (tabName === 'faqs') renderFAQs(data);
-        else if (tabName === 'dev') renderDev(data);
-        else renderCards(data); // For Connect, Projects, Admin
+                // Route to correct renderer
+                if (tabName === 'faqs') {
+                    renderFAQs(data);
+                } else if (tabName === 'dev') {
+                    renderDev(data);
+                } else if (tabName === 'connect') {
+                    renderCards(data, true); // true = process subsections (Community + Admins)
+                } else {
+                    renderCards(data, false); // false = standard flat list (Projects)
+                }
 
-    } catch (error) {
-        contentArea.innerHTML = `<p style="text-align:center; color:#ff0055;">Error loading ${tabName} data.</p>`;
-        console.error("Fetch error:", error);
-    }
-}
+            } catch (error) {
+                contentArea.innerHTML = `<p style="text-align:center; color:#ff0055;">Error loading ${tabName} data.</p>`;
+                console.error("Fetch error:", error);
+            }
+        }
 
-
+        // --- FAQ Renderer ---
         function renderFAQs(data) {
-    contentArea.innerHTML = data.map((item, index) => `
-        <div class="faq-item" id="faq-${index}" onclick="toggleFAQ(${index})">
-            <div class="faq-q">
-                ${item.q}
-            </div>
-            <div class="faq-a">
-                ${item.a}
-            </div>
-        </div>
-    `).join('');
-}
+            contentArea.innerHTML = data.map((item, index) => `
+                <div class="faq-item" id="faq-${index}" onclick="toggleFAQ(${index})">
+                    <div class="faq-q">${item.q}</div>
+                    <div class="faq-a">${item.a}</div>
+                </div>
+            `).join('');
+        }
 
-// Function to handle the opening/closing logic
-function toggleFAQ(index) {
-    const item = document.getElementById(`faq-${index}`);
-    
-    // Optional: Close other open FAQs first (Accordion style)
-    document.querySelectorAll('.faq-item').forEach(otherItem => {
-        if (otherItem !== item) otherItem.classList.remove('open');
-    });
+        function toggleFAQ(index) {
+            const item = document.getElementById(`faq-${index}`);
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('open');
+            });
+            item.classList.toggle('open');
+        }
 
-    item.classList.toggle('open');
-}
+        // --- Cards Renderer (Connect & Projects) ---
+        function renderCards(data, isConnect) {
+            let html = '';
 
+            if (isConnect) {
+                // Render Community Subsection
+                html += `<h3 style="margin: 0 0 20px 0; opacity: 0.6; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Community Portal</h3>`;
+                html += `<div class="grid-container" style="margin-bottom: 50px;">${generateGrid(data.community)}</div>`;
+                
+                // Render Admin Subsection
+                html += `<h3 style="margin: 0 0 20px 0; opacity: 0.6; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Admin Personals</h3>`;
+                html += `<div class="grid-container">${generateGrid(data.admins)}</div>`;
+            } else {
+                // Render standard flat grid (Projects)
+                html += `<div class="grid-container">${generateGrid(data)}</div>`;
+            }
 
-        function renderCards(data) {
-            contentArea.innerHTML = `<div class="grid-container">` + data.map(item => `
-                <div class="card">
+            contentArea.innerHTML = html;
+        }
+
+        // Helper to build individual cards with the "Blackout" overlay
+        function generateGrid(items) {
+            return items.map((item, i) => {
+                // Generate a unique ID for each card to handle the overlay toggle
+                const cardId = `card-${Math.random().toString(36).substr(2, 9)}`;
+                return `
+                <div class="card" id="${cardId}" onclick="openCard('${cardId}')">
                     ${item.tag ? `<div class="badge">${item.tag}</div>` : ''}
                     <img src="${item.img}" class="card-img" style="border-color:${item.color}">
                     <div class="card-info">
@@ -324,23 +369,36 @@ function toggleFAQ(index) {
                             <span>${item.status}</span>
                         </div>
                     </div>
+                    <div class="overlay">
+                        <button class="btn btn-view" onclick="window.open('${item.link}', '_blank')">VIEW</button>
+                        <button class="btn btn-cancel" onclick="closeCard('${cardId}', event)">CANCEL</button>
+                    </div>
                 </div>
-            `).join('') + `</div>`;
+            `}).join('');
         }
 
+        // Card Interaction Logic
+        function openCard(id) {
+            document.getElementById(id).classList.add('active-state');
+        }
+
+        function closeCard(id, e) {
+            e.stopPropagation(); // Stops the click from re-opening the card
+            document.getElementById(id).classList.remove('active-state');
+        }
+
+        // --- Dev Section Renderer ---
         function renderDev(data) {
             contentArea.innerHTML = data.map((item, index) => {
-                // Parse the custom <501> tags into spans for styling
-                // We use Regex to find <501>...</501> and replace it with standard HTML
                 const formattedCode = item.code
-                    .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML first
-                    .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>'); // Apply custom style
+                    .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+                    .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>');
 
                 return `
                     <div class="code-block-wrapper">
                         <div class="code-header">
                             <span>${item.title}</span>
-                            <button class="copy-btn" onclick="copyCode(this, \`${item.code.replace(/`/g, '\\`')}\`)">Copy Code</button>
+                            <button class="copy-btn" onclick="copyCode(this, \`${item.code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copy Code</button>
                         </div>
                         <pre><code>${formattedCode}</code></pre>
                     </div>
@@ -352,41 +410,36 @@ function toggleFAQ(index) {
         // UTILITIES & INTERACTIONS
         // ==========================================
 
-        // Copy Code Function
         function copyCode(btn, rawCode) {
-            // Strip the <501> tags for the clipboard so the user gets valid code
             const cleanCode = rawCode.replace(/<501>/g, '').replace(/<\/501>/g, '');
             navigator.clipboard.writeText(cleanCode).then(() => {
                 const originalText = btn.innerText;
                 btn.innerText = "Copied!";
-                btn.style.background = "var(--status-green)";
+                btn.style.background = "#00ff88";
+                btn.style.color = "#000";
                 setTimeout(() => {
                     btn.innerText = originalText;
                     btn.style.background = "";
+                    btn.style.color = "";
                 }, 2000);
             });
         }
 
-        // Theme Switcher
         function setTheme(theme) {
             if (theme === 'light') document.body.classList.add('theme-light');
             else document.body.classList.remove('theme-light');
         }
 
-        // Scroll Progress Ring Logic
         const scrollBtn = document.getElementById('scroll-top-btn');
         const scrollProgress = document.getElementById('scroll-progress');
-        const circumference = 125.6; // 2 * pi * r (where r=20)
+        const circumference = 125.6; 
 
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            
-            // Show/Hide Button
             if (scrollTop > 100) scrollBtn.classList.add('visible');
             else scrollBtn.classList.remove('visible');
 
-            // Update Progress Ring
             if (docHeight > 0) {
                 const scrollPercent = scrollTop / docHeight;
                 const offset = circumference - (scrollPercent * circumference);
@@ -401,5 +454,6 @@ function toggleFAQ(index) {
         // Initialize default tab
         loadTab('faqs');
     </script>
+
 </body>
 </html>
