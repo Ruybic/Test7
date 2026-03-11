@@ -137,12 +137,54 @@
             background: var(--highlight-501); border: 1px dashed var(--highlight-border); padding: 2px 6px; border-radius: 4px; color: var(--highlight-border); display: inline-block;
         }
 
-        /* --- FAQ Section --- */
-        .faq-item {
-            background: var(--card-bg); margin-bottom: 10px; border-radius: 10px; padding: 15px 20px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .faq-q { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; color: var(--accent-blue); }
-        .faq-a { font-size: 0.9rem; color: var(--text-muted); }
+     /* --- Enhanced FAQ Accordion --- */
+.faq-item {
+    background: var(--card-bg);
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden; /* Clips the answer when closed */
+    transition: 0.3s;
+}
+
+.faq-q {
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: var(--accent-blue);
+    user-select: none;
+}
+
+.faq-q::after {
+    content: '+';
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+/* When the parent faq-item has the 'open' class */
+.faq-item.open .faq-q::after {
+    transform: rotate(45deg); /* Turns the + into an x */
+}
+
+.faq-a {
+    max-height: 0; /* Hidden by default */
+    padding: 0 20px;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.faq-item.open .faq-a {
+    max-height: 200px; /* Adjust based on expected content length */
+    padding-bottom: 20px;
+    opacity: 1;
+}
+
 
         /* --- Floating Controls (Bottom Right) --- */
         .floating-controls {
@@ -244,13 +286,30 @@
 
 
         function renderFAQs(data) {
-            contentArea.innerHTML = data.map(item => `
-                <div class="faq-item">
-                    <div class="faq-q">${item.q}</div>
-                    <div class="faq-a">${item.a}</div>
-                </div>
-            `).join('');
-        }
+    contentArea.innerHTML = data.map((item, index) => `
+        <div class="faq-item" id="faq-${index}" onclick="toggleFAQ(${index})">
+            <div class="faq-q">
+                ${item.q}
+            </div>
+            <div class="faq-a">
+                ${item.a}
+            </div>
+        </div>
+    `).join('');
+}
+
+// Function to handle the opening/closing logic
+function toggleFAQ(index) {
+    const item = document.getElementById(`faq-${index}`);
+    
+    // Optional: Close other open FAQs first (Accordion style)
+    document.querySelectorAll('.faq-item').forEach(otherItem => {
+        if (otherItem !== item) otherItem.classList.remove('open');
+    });
+
+    item.classList.toggle('open');
+}
+
 
         function renderCards(data) {
             contentArea.innerHTML = `<div class="grid-container">` + data.map(item => `
