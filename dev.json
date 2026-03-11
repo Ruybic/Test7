@@ -1,7 +1,8 @@
 [
     { 
-        "title": "Bot Initialization", 
-        "code": "import telebot\nbot = telebot.TeleBot(\"<501>INSERT_TOKEN</501>\")\nbot.infinity_polling()" 
+        "title": "Telegram Bot Framework", 
+        "img": "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+        "code": "import telebot\nbot = telebot.TeleBot(\"<501>YOUR_TOKEN_HERE</501>\")\n@bot.message_handler(commands=['start'])\ndef start(m): bot.reply_to(m, 'Heaven501 Active')" 
     }
 ]
 
