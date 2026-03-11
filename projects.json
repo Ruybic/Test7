@@ -1,10 +1,4 @@
 [
-    { 
-        "name": "Project Alpha", 
-        "desc": "Next-gen bot integration.", 
-        "img": "https://placehold.co/80/38bdf8/000?text=PA", 
-        "color": "#38bdf8", 
-        "status": "active", 
-        "tag": "Beta" 
-    }
+    { "name": "JSONovel Engine", "desc": "Custom visual novel engine workflow.", "img": "https://placehold.co/80/38bdf8/000?text=JS", "color": "#38bdf8", "status": "construction", "tag": "Alpha", "link": "#" },
+    { "name": "Unknown Data", "desc": "Awaiting synchronization.", "img": "https://placehold.co/80/ffffff/000?text=?", "color": "#ffffff", "status": "unknown", "tag": "", "link": "#" }
 ]
