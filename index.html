@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heaven501 Hub</title>
     <style>
-        /* --- CSS Variables & Theming --- */
         :root {
             --bg-main: #070b14;
             --bg-gradient: radial-gradient(circle at top, #111827 0%, var(--bg-main) 100%);
@@ -19,7 +18,6 @@
             --highlight-border: #ffd700;
         }
 
-        /* Light Theme Override */
         body.theme-light {
             --bg-main: #f0f4f8;
             --bg-gradient: radial-gradient(circle at top, #ffffff 0%, var(--bg-main) 100%);
@@ -40,10 +38,10 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
+            transition: 0.5s;
         }
 
-        /* --- Header & Navigation --- */
+        /* --- Header & Horizontal Nav --- */
         header {
             width: 100%;
             max-width: 1200px;
@@ -51,318 +49,249 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: inherit;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            margin-right: 40px;
+            margin-right: 30px;
             flex-shrink: 0;
         }
-
-        .brand img { width: 40px; height: 40px; border-radius: 8px; margin-right: 12px; }
-        .brand h1 { font-size: 1.8rem; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; }
-        .brand h1 .heaven { color: var(--accent-blue); }
-        .brand h1 .five-o-one { color: var(--text-main); }
+        .brand img { width: 35px; height: 35px; border-radius: 6px; margin-right: 10px; }
+        .brand h1 { font-size: 1.5rem; margin: 0; }
+        .brand .blue { color: var(--accent-blue); }
+        .brand .white { color: var(--text-main); }
 
         nav {
             flex: 1;
             overflow-x: auto;
             white-space: nowrap;
-            scrollbar-width: none; /* Firefox */
+            -webkit-overflow-scrolling: touch;
         }
-        nav::-webkit-scrollbar { display: none; } /* Chrome */
-        
+        nav::-webkit-scrollbar { display: none; }
+
         .nav-list {
-            list-style: none; padding: 0; margin: 0; display: flex; gap: 20px;
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            padding: 0;
+            margin: 0;
         }
         .nav-list li {
-            cursor: pointer; font-weight: 600; color: var(--text-muted); transition: 0.3s; padding: 5px 10px; border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-radius: 30px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.8rem;
         }
-        .nav-list li:hover { color: var(--text-main); }
-        .nav-list li.active { color: var(--text-main); background: var(--tag-bg); }
+        .nav-list li.active { background: var(--tag-bg); color: var(--accent-blue); }
 
-        /* --- Main Content Area --- */
-        #content-area {
-            width: 100%; max-width: 1100px; padding: 0 20px 100px 20px; box-sizing: border-box;
-        }
-
-        /* Grid for Cards (Connect, Projects, Admin) */
+        /* --- Grid & Cards --- */
+        #content-area { width: 100%; max-width: 1100px; padding: 40px 20px; box-sizing: border-box; }
+        
         .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
         }
 
-        /* --- Card Styling (Retained & Enhanced) --- */
+        .section-title {
+            width: 100%;
+            opacity: 0.6;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 40px 0 20px 0;
+        }
+
         .card {
-            background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px; padding: 20px; display: flex; align-items: center; position: relative;
-            overflow: hidden; transition: 0.3s; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: transform 0.3s;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
-        .card-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-right: 20px; }
+        .card:hover { transform: translateY(-5px); }
+
+        .card-img { width: 60px; height: 60px; border-radius: 12px; margin-right: 15px; object-fit: cover; border: 2px solid transparent; }
         .card-info { flex: 1; }
-        .card-name { font-size: 1.15rem; font-weight: 800; margin: 0; text-transform: uppercase; }
-        .card-desc { font-size: 0.85rem; color: var(--text-muted); margin: 6px 0; line-height: 1.5; }
+        .card-name { font-size: 1rem; margin: 0; }
+        .card-desc { font-size: 0.8rem; opacity: 0.6; margin: 5px 0; }
 
-        /* Overlay Effect */
-.card .overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85); /* The Blackout */
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 10;
-}
-
-.card.active-state .overlay {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.btn-view { background: var(--accent-blue); color: #000; }
-.btn-cancel { background: #334155; color: #fff; }
-
-        
-        /* Tags (Sponsored/Recommended) */
-        .badge {
-            position: absolute; top: 15px; right: 15px; background: var(--tag-bg); color: var(--accent-blue);
-            padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--accent-blue);
+        /* Blackout Overlay */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
         }
+        .card.active-state .overlay { opacity: 1; pointer-events: all; }
 
-        /* Liquid Status Dots */
-        .status-row { display: flex; align-items: center; margin-top: 10px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
-        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; position: relative; z-index: 1; background-size: 300% 300%; animation: oceanFlow 4s ease infinite; }
-        .dot::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; z-index: -1; filter: blur(8px); background: inherit; background-size: 300% 300%; animation: oceanFlow 4s ease infinite, auraBreathe 2.5s ease-in-out infinite alternate; }
-        .status-active { background-image: linear-gradient(135deg, #00ff88, #0ea5e9, #00ff88); }
-        .status-construction { background: radial-gradient(circle at center, #ffd700, #8b6b00, #000000); background-size: 200% 200%; animation: moltenFlow 3s ease-in-out infinite alternate; }
-
-        /* --- Dev Section Code Formatting --- */
-        .code-block-wrapper {
-            background: var(--code-bg); border-radius: 12px; padding: 20px; position: relative; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.75rem;
         }
-        .code-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; font-weight: bold; color: var(--accent-blue);
-        }
-        .copy-btn {
-            background: rgba(255,255,255,0.1); border: none; color: var(--text-main); padding: 5px 15px; border-radius: 6px; cursor: pointer; transition: 0.2s;
-        }
-        .copy-btn:hover { background: var(--accent-blue); color: #000; }
-        pre { margin: 0; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
-        
-        /* Custom <501> Tag Styling */
-        .tag-501 {
-            background: var(--highlight-501); border: 1px dashed var(--highlight-border); padding: 2px 6px; border-radius: 4px; color: var(--highlight-border); display: inline-block;
-        }
+        .btn-view { background: var(--accent-blue); color: #000; }
+        .btn-cancel { background: #334155; color: #fff; }
 
-     /* --- Enhanced FAQ Accordion --- */
-.faq-item {
-    background: var(--card-bg);
-    margin-bottom: 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden; /* Clips the answer when closed */
-    transition: 0.3s;
-}
+        /* Badge & Status */
+        .badge { position: absolute; top: 10px; right: 10px; background: var(--tag-bg); color: var(--accent-blue); padding: 3px 10px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; }
+        .status-row { display: flex; align-items: center; gap: 8px; font-size: 0.65rem; font-weight: bold; margin-top: 8px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-active { background: #00ff88; box-shadow: 0 0 10px #00ff88; }
+        .status-construction { background: #ffd700; box-shadow: 0 0 10px #ffd700; }
 
-.faq-q {
-    padding: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    color: var(--accent-blue);
-    user-select: none;
-}
+        /* --- FAQ Accordion --- */
+        .faq-item { background: var(--card-bg); margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .faq-q { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; color: var(--accent-blue); }
+        .faq-q::after { content: '+'; }
+        .faq-item.open .faq-q::after { content: '−'; }
+        .faq-a { max-height: 0; opacity: 0; padding: 0 20px; transition: 0.3s ease-out; overflow: hidden; font-size: 0.9rem; color: var(--text-muted); }
+        .faq-item.open .faq-a { max-height: 200px; opacity: 1; padding-bottom: 20px; }
 
-.faq-q::after {
-    content: '+';
-    font-size: 1.5rem;
-    transition: transform 0.3s ease;
-}
+        /* --- Dev Section --- */
+        .code-block-wrapper { background: var(--code-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; position: relative; }
+        .tag-501 { background: var(--highlight-501); border: 1px dashed var(--highlight-border); color: var(--highlight-border); padding: 2px 5px; border-radius: 4px; }
+        .copy-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; }
 
-/* When the parent faq-item has the 'open' class */
-.faq-item.open .faq-q::after {
-    transform: rotate(45deg); /* Turns the + into an x */
-}
-
-.faq-a {
-    max-height: 0; /* Hidden by default */
-    padding: 0 20px;
-    opacity: 0;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--text-muted);
-    line-height: 1.6;
-}
-
-.faq-item.open .faq-a {
-    max-height: 200px; /* Adjust based on expected content length */
-    padding-bottom: 20px;
-    opacity: 1;
-}
-
-
-        /* --- Floating Controls (Bottom Right) --- */
-        .floating-controls {
-            position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center; z-index: 100;
-        }
-        
-        /* Scroll Ring */
-        .scroll-ring-container {
-            position: relative; width: 50px; height: 50px; cursor: pointer; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        /* --- Floating UI --- */
+        .floating-controls { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+        .scroll-ring-container { 
+            width: 45px; height: 45px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.1); opacity: 0; pointer-events: none; transition: 0.3s;
         }
         .scroll-ring-container.visible { opacity: 1; pointer-events: all; }
-        .scroll-ring-svg { transform: rotate(-90deg); width: 50px; height: 50px; }
-        .scroll-ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 4; }
-        .scroll-ring-progress { fill: none; stroke: var(--accent-blue); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.1s; }
-        .scroll-arrow {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-main); font-weight: bold; font-size: 1.2rem; pointer-events: none;
-        }
-
-        /* Theme Toggles */
-        .theme-toggles { display: flex; gap: 10px; background: var(--card-bg); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .theme-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
-        .theme-btn.dark { background: #070b14; border-color: rgba(255,255,255,0.3); }
-        .theme-btn.light { background: #f0f4f8; border-color: rgba(0,0,0,0.3); }
-        .theme-btn:hover { transform: scale(1.1); }
-
-        /* Animations */
-        @keyframes oceanFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes auraBreathe { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
-        @keyframes moltenFlow { 0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 100%; } }
+        .theme-toggles { background: var(--card-bg); padding: 10px; border-radius: 30px; display: flex; gap: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .theme-btn { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; }
+        .dark { background: #070b14; border: 1px solid #fff; }
+        .light { background: #f8fafc; border: 1px solid #000; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="brand">
-            <img src="https://placehold.co/100/38bdf8/000000?text=H" alt="Logo">
-            <h1><span class="heaven">Heaven</span><span class="five-o-one">501</span></h1>
+            <img src="https://placehold.co/100/38bdf8/ffffff?text=H" alt="Logo">
+            <h1><span class="blue">Heaven</span><span class="white">501</span></h1>
         </div>
         <nav>
             <ul class="nav-list">
-                <li onclick="loadTab('faqs')" id="nav-faqs" class="active">FAQs</li>
+                <li onclick="loadTab('faqs')" id="nav-faqs">FAQs</li>
                 <li onclick="loadTab('projects')" id="nav-projects">Projects</li>
                 <li onclick="loadTab('connect')" id="nav-connect">Connect</li>
                 <li onclick="loadTab('dev')" id="nav-dev">Dev</li>
-                <li onclick="loadTab('admin')" id="nav-admin">Admin</li>
             </ul>
         </nav>
     </header>
 
-    <main id="content-area">
-        </main>
+    <main id="content-area"></main>
 
     <div class="floating-controls">
-        <div class="scroll-ring-container" id="scroll-top-btn" onclick="scrollToTop()">
-            <svg class="scroll-ring-svg">
-                <circle class="scroll-ring-bg" cx="25" cy="25" r="20"></circle>
-                <circle class="scroll-ring-progress" id="scroll-progress" cx="25" cy="25" r="20" stroke-dasharray="125.6" stroke-dashoffset="125.6"></circle>
-            </svg>
-            <div class="scroll-arrow">↑</div>
-        </div>
-
+        <div class="scroll-ring-container" id="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</div>
         <div class="theme-toggles">
-            <div class="theme-btn dark" onclick="setTheme('dark')" title="Dark Mode"></div>
-            <div class="theme-btn light" onclick="setTheme('light')" title="Light Mode"></div>
+            <div class="theme-btn dark" onclick="setTheme('dark')"></div>
+            <div class="theme-btn light" onclick="setTheme('light')"></div>
         </div>
     </div>
 
     <script>
-
-           // ==========================================
-        // RENDER FUNCTIONS
-        // ==========================================
         const contentArea = document.getElementById('content-area');
 
-        async function loadTab(tabName) {
-            // Update Nav UI
-            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
-            const activeNav = document.getElementById(`nav-${tabName}`);
-            if (activeNav) activeNav.classList.add('active');
+        // --- LOCAL BACKUP DATA (In case fetch fails) ---
+        const localDB = {
+            faqs: [
+                { q: "How to use this?", a: "Click the tabs above to navigate different sections of the community." },
+                { q: "What is Dev mode?", a: "It's for coders to copy bot snippets for Heaven501 integration." }
+            ],
+            connect: {
+                community: [{ name: "Main Portal", desc: "Access the hub.", img: "https://placehold.co/80", color: "#38bdf8", status: "active", tag: "Recommended", link: "#" }],
+                admins: [{ name: "Owner 501", desc: "Primary Admin", img: "https://placehold.co/80", color: "#ffd700", status: "active", tag: "Admin", link: "#" }]
+            },
+            projects: [
+                { name: "Heaven Bot", desc: "The official community bot.", img: "https://placehold.co/80", color: "#38bdf8", status: "active", tag: "Beta", link: "#" }
+            ],
+            dev: [
+                { title: "Bot Token Setup", code: "const bot = new Heaven501('<501>YOUR_TOKEN_HERE</501>');\nbot.start();" }
+            ]
+        };
 
-            // Show a loading state
-            contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Loading...</p>';
+        async function loadTab(tabName) {
+            document.querySelectorAll('.nav-list li').forEach(li => li.classList.remove('active'));
+            document.getElementById(`nav-${tabName}`).classList.add('active');
+            contentArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Syncing HeavenLink...</p>';
 
             try {
                 const response = await fetch(`${tabName}.json`);
+                if (!response.ok) throw new Error();
                 const data = await response.json();
-
-                // Route to correct renderer
-                if (tabName === 'faqs') {
-                    renderFAQs(data);
-                } else if (tabName === 'dev') {
-                    renderDev(data);
-                } else if (tabName === 'connect') {
-                    renderCards(data, true); // true = process subsections (Community + Admins)
-                } else {
-                    renderCards(data, false); // false = standard flat list (Projects)
-                }
-
-            } catch (error) {
-                contentArea.innerHTML = `<p style="text-align:center; color:#ff0055;">Error loading ${tabName} data.</p>`;
-                console.error("Fetch error:", error);
+                renderSwitch(tabName, data);
+            } catch {
+                console.warn(`Using local backup for ${tabName}`);
+                renderSwitch(tabName, localDB[tabName]);
             }
         }
 
-        // --- FAQ Renderer ---
+        function renderSwitch(tabName, data) {
+            if (tabName === 'faqs') renderFAQs(data);
+            else if (tabName === 'dev') renderDev(data);
+            else if (tabName === 'connect') renderConnect(data);
+            else renderProjects(data);
+        }
+
         function renderFAQs(data) {
-            contentArea.innerHTML = data.map((item, index) => `
-                <div class="faq-item" id="faq-${index}" onclick="toggleFAQ(${index})">
+            contentArea.innerHTML = data.map((item, i) => `
+                <div class="faq-item" onclick="this.classList.toggle('open')">
                     <div class="faq-q">${item.q}</div>
                     <div class="faq-a">${item.a}</div>
                 </div>
             `).join('');
         }
 
-        function toggleFAQ(index) {
-            const item = document.getElementById(`faq-${index}`);
-            document.querySelectorAll('.faq-item').forEach(otherItem => {
-                if (otherItem !== item) otherItem.classList.remove('open');
-            });
-            item.classList.toggle('open');
-        }
-
-        // --- Cards Renderer (Connect & Projects) ---
-        function renderCards(data, isConnect) {
-            let html = '';
-
-            if (isConnect) {
-                // Render Community Subsection
-                html += `<h3 style="margin: 0 0 20px 0; opacity: 0.6; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Community Portal</h3>`;
-                html += `<div class="grid-container" style="margin-bottom: 50px;">${generateGrid(data.community)}</div>`;
-                
-                // Render Admin Subsection
-                html += `<h3 style="margin: 0 0 20px 0; opacity: 0.6; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Admin Personals</h3>`;
-                html += `<div class="grid-container">${generateGrid(data.admins)}</div>`;
-            } else {
-                // Render standard flat grid (Projects)
-                html += `<div class="grid-container">${generateGrid(data)}</div>`;
-            }
-
+        function renderConnect(data) {
+            let html = '<div class="section-title">Community Portal</div>';
+            html += `<div class="grid-container">${generateCards(data.community)}</div>`;
+            html += '<div class="section-title">Admin Personals</div>';
+            html += `<div class="grid-container">${generateCards(data.admins)}</div>`;
             contentArea.innerHTML = html;
         }
 
-        // Helper to build individual cards with the "Blackout" overlay
-        function generateGrid(items) {
-            return items.map((item, i) => {
-                // Generate a unique ID for each card to handle the overlay toggle
-                const cardId = `card-${Math.random().toString(36).substr(2, 9)}`;
+        function renderProjects(data) {
+            contentArea.innerHTML = `<div class="grid-container">${generateCards(data)}</div>`;
+        }
+
+        function generateCards(items) {
+            return items.map(item => {
+                const id = 'c' + Math.random().toString(36).substr(2, 4);
                 return `
-                <div class="card" id="${cardId}" onclick="openCard('${cardId}')">
+                <div class="card" id="${id}" onclick="openCard('${id}')">
                     ${item.tag ? `<div class="badge">${item.tag}</div>` : ''}
                     <img src="${item.img}" class="card-img" style="border-color:${item.color}">
                     <div class="card-info">
-                        <h2 class="card-name" style="color:${item.color}">${item.name}</h2>
+                        <h4 class="card-name" style="color:${item.color}">${item.name}</h4>
                         <p class="card-desc">${item.desc}</p>
                         <div class="status-row">
                             <div class="dot status-${item.status}"></div>
@@ -370,90 +299,45 @@
                         </div>
                     </div>
                     <div class="overlay">
-                        <button class="btn btn-view" onclick="window.open('${item.link}', '_blank')">VIEW</button>
-                        <button class="btn btn-cancel" onclick="closeCard('${cardId}', event)">CANCEL</button>
+                        <button class="btn btn-view" onclick="window.open('${item.link}')">VIEW</button>
+                        <button class="btn btn-cancel" onclick="closeCard('${id}', event)">CANCEL</button>
                     </div>
-                </div>
-            `}).join('');
-        }
-
-        // Card Interaction Logic
-        function openCard(id) {
-            document.getElementById(id).classList.add('active-state');
-        }
-
-        function closeCard(id, e) {
-            e.stopPropagation(); // Stops the click from re-opening the card
-            document.getElementById(id).classList.remove('active-state');
-        }
-
-        // --- Dev Section Renderer ---
-        function renderDev(data) {
-            contentArea.innerHTML = data.map((item, index) => {
-                const formattedCode = item.code
-                    .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
-                    .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>');
-
-                return `
-                    <div class="code-block-wrapper">
-                        <div class="code-header">
-                            <span>${item.title}</span>
-                            <button class="copy-btn" onclick="copyCode(this, \`${item.code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copy Code</button>
-                        </div>
-                        <pre><code>${formattedCode}</code></pre>
-                    </div>
-                `;
+                </div>`;
             }).join('');
         }
 
-        // ==========================================
-        // UTILITIES & INTERACTIONS
-        // ==========================================
-
-        function copyCode(btn, rawCode) {
-            const cleanCode = rawCode.replace(/<501>/g, '').replace(/<\/501>/g, '');
-            navigator.clipboard.writeText(cleanCode).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = "Copied!";
-                btn.style.background = "#00ff88";
-                btn.style.color = "#000";
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.style.background = "";
-                    btn.style.color = "";
-                }, 2000);
-            });
+        function renderDev(data) {
+            contentArea.innerHTML = data.map(item => {
+                const formatted = item.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                                           .replace(/&lt;501&gt;(.*?)&lt;\/501&gt;/g, '<span class="tag-501">$1</span>');
+                return `
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this, \`${item.code}\`)">Copy</button>
+                    <h4 style="margin-top:0; color:var(--accent-blue)">${item.title}</h4>
+                    <pre><code>${formatted}</code></pre>
+                </div>`;
+            }).join('');
         }
 
-        function setTheme(theme) {
-            if (theme === 'light') document.body.classList.add('theme-light');
-            else document.body.classList.remove('theme-light');
+        function openCard(id) { document.getElementById(id).classList.add('active-state'); }
+        function closeCard(id, e) { e.stopPropagation(); document.getElementById(id).classList.remove('active-state'); }
+
+        function copyCode(btn, text) {
+            const clean = text.replace(/<501>/g, '').replace(/<\/501>/g, '');
+            navigator.clipboard.writeText(clean);
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = "Copy", 2000);
         }
 
-        const scrollBtn = document.getElementById('scroll-top-btn');
-        const scrollProgress = document.getElementById('scroll-progress');
-        const circumference = 125.6; 
+        function setTheme(t) { t === 'light' ? document.body.classList.add('theme-light') : document.body.classList.remove('theme-light'); }
 
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (scrollTop > 100) scrollBtn.classList.add('visible');
-            else scrollBtn.classList.remove('visible');
+        window.onscroll = () => {
+            const btn = document.getElementById('scroll-top-btn');
+            window.scrollY > 200 ? btn.classList.add('visible') : btn.classList.remove('visible');
+        };
 
-            if (docHeight > 0) {
-                const scrollPercent = scrollTop / docHeight;
-                const offset = circumference - (scrollPercent * circumference);
-                scrollProgress.style.strokeDashoffset = offset;
-            }
-        });
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Initialize default tab
+        // Initialize
         loadTab('faqs');
     </script>
-
 </body>
 </html>
