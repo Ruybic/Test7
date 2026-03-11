@@ -15,4 +15,12 @@
         "status": "construction", 
         "tag": "Sponsored" 
     }
+{
+    "community": [
+        { "name": "Hay Day Elite", "desc": "Active traders only!", "img": "https://placehold.co/80/00ff88/000?text=HD", "color": "#00ff88", "status": "active", "tag": "Recommended", "link": "#" }
+    ],
+    "admins": [
+        { "name": "SysAdmin Zero", "desc": "Infrastructure Overseer", "img": "https://placehold.co/80/ff0055/fff?text=SA", "color": "#ff0055", "status": "active", "tag": "Owner", "link": "#" }
+    ]
+}
 ]
